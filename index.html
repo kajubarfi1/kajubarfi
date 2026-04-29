@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kajubarfi's Coffee House</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --espresso:     #2C1810;
+  --dark-roast:   #3D2117;
+  --americano:    #5C3A2A;
+  --caramel:      #B07842;
+  --golden-foam:  #D4A96A;
+  --oat-milk:     #E8D5B7;
+  --cream:        #F5EDE0;
+  --latte-foam:   #FAF6F0;
+
+  --matcha:       #6B8F5E;
+  --chai:         #C4713B;
+  --berry:        #8B3A5E;
+  --iced-blue:    #5E8FA3;
+
+  --text-primary:   var(--espresso);
+  --text-secondary: var(--americano);
+  --text-muted:     #8C7A6B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--latte-foam);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   GRADIENT WRAPPER — everything after hero
+   Very gradual: latte-foam → oat-milk over the
+   entire page height. 9 stops for smoothness.
+   ============================================ */
+.page-content {
+  background: linear-gradient(
+    180deg,
+    #FAF6F0 0%,
+    #F9F5ED 6%,
+    #F8F3EA 12%,
+    #F7F1E7 20%,
+    #F5EEE2 30%,
+    #F3EBDD 42%,
+    #F1E8D8 55%,
+    #EFE4D2 68%,
+    #EDE1CD 80%,
+    #EBDDC7 90%,
+    #E8D5B7 100%
+  );
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background: rgba(250,246,240,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(44,24,16,0.06);
+  transition: all 0.4s ease;
+}
+.navbar.scrolled {
+  padding: 12px 40px;
+  background: rgba(250,246,240,0.95);
+  box-shadow: 0 2px 20px rgba(44,24,16,0.06);
+}
+.nav-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.15rem;
+  color: var(--espresso);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-logo .coffee-icon { font-size: 1.3rem; }
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  align-items: center;
+}
+.nav-links > li { position: relative; }
+.nav-links a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--chai); }
+.nav-links > li > a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--chai);
+  transition: width 0.3s;
+}
+.nav-links > li > a:hover::after { width: 100%; }
+
+.nav-contact-btn {
+  background: var(--espresso) !important;
+  color: var(--cream) !important;
+  padding: 8px 22px !important;
+  border-radius: 100px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s !important;
+}
+.nav-contact-btn:hover {
+  background: var(--chai) !important;
+  color: white !important;
+}
+.nav-contact-btn::after { display: none !important; }
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  margin-left: 2px;
+  opacity: 0.5;
+  transition: transform 0.3s;
+}
+.nav-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  list-style: none;
+  background: rgba(250,246,240,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(44,24,16,0.08);
+  border-radius: 12px;
+  padding: 8px 0;
+  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(44,24,16,0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(8px);
+  transition: all 0.25s ease;
+  z-index: 1001;
+}
+.nav-dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.dropdown-menu li { padding: 0; }
+.dropdown-menu a {
+  display: block;
+  padding: 10px 20px;
+  font-size: 0.83rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.dropdown-menu a:hover {
+  background: rgba(44,24,16,0.04);
+  color: var(--chai);
+  padding-left: 24px;
+}
+.dropdown-menu a::after { display: none; }
+.nav-dropdown::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 0;
+  width: 100%; height: 16px;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none; border: none;
+  padding: 4px;
+}
+.hamburger span {
+  width: 24px; height: 2px;
+  background: var(--espresso);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ============================================
+   HERO SECTION — Full viewport (no gradient)
+   ============================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  padding: 80px 40px 60px;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(176,120,66,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(212,169,106,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+.steam-container {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.steam {
+  position: absolute;
+  width: 2px;
+  background: rgba(176,120,66,0.12);
+  border-radius: 50%;
+  animation: steamRise linear infinite;
+}
+@keyframes steamRise {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(-100vh) translateX(40px) scale(0.3); opacity: 0; }
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-animation { margin-bottom: 24px; }
+.hero-animation .coffee-cup-art {
+  font-size: 4rem;
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.hero-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  color: var(--espresso);
+  line-height: 1.05;
+  margin-bottom: 16px;
+  animation: fadeUp 1s ease 0.3s both;
+}
+.hero-title em { font-style: italic; color: var(--chai); }
+.hero-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--americano);
+  opacity: 0.7;
+  margin-bottom: 48px;
+  animation: fadeUp 1s ease 0.6s both;
+}
+.scroll-indicator { animation: fadeUp 1s ease 0.9s both; cursor: pointer; }
+.scroll-indicator .arrow {
+  display: inline-block;
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(44,24,16,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  animation: bounceDown 2s ease-in-out infinite;
+  transition: border-color 0.3s;
+}
+.scroll-indicator .arrow:hover { border-color: var(--chai); }
+.scroll-indicator .arrow svg {
+  width: 16px; height: 16px;
+  stroke: var(--americano);
+  stroke-width: 2;
+  fill: none;
+}
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   INTRO SECTION
+   ============================================ */
+.intro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 40px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+}
+.intro-photo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.intro-photo img {
+  width: 100%;
+  max-width: 580px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+.typewriter-block { margin-bottom: 40px; }
+.typewriter-line {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  color: var(--espresso);
+  line-height: 1.2;
+  overflow: hidden;
+}
+.typewriter-line .highlight { color: var(--chai); }
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--chai);
+  margin-left: 4px;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.intro-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+.intro-body a {
+  color: var(--matcha);
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 3px;
+  transition: color 0.3s;
+}
+.intro-body a:hover { color: var(--chai); }
+.intro-handwritten {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  color: var(--chai);
+}
+
+/* ============================================
+   MUSIC SECTION
+   ============================================ */
+.music-section { padding: 40px 40px 60px; position: relative; }
+.music-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.music-heading {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--espresso);
+  margin-bottom: 8px;
+}
+.music-sub {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+.music-controls { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.genre-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 100px;
+  border: 1.5px solid var(--oat-milk);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.genre-btn:hover, .genre-btn.active {
+  background: var(--espresso);
+  color: var(--cream);
+  border-color: var(--espresso);
+}
+.genre-btn.surprise { border-color: var(--chai); color: var(--chai); }
+.genre-btn.surprise:hover { background: var(--chai); color: white; }
+.spotify-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.doodle-image { width: 100%; }
+.doodle-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* ============================================
+   VIDEO GAME SECTION
+   ============================================ */
+.game-section { padding: 60px 40px; position: relative; }
+.game-inner { max-width: 1400px; margin: 0 auto; }
+.game-heading {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--espresso);
+  margin-bottom: 8px;
+  text-align: left;
+}
+.game-sub {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  text-align: left;
+}
+.game-canvas {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 16px;
+  background: var(--dark-roast);
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.game-canvas::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+  pointer-events: none;
+}
+.game-placeholder {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--golden-foam);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.game-placeholder .big-text {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.game-controls { display: flex; gap: 12px; margin-top: 20px; justify-content: center; }
+.game-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid var(--golden-foam);
+  background: transparent;
+  color: var(--golden-foam);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.game-btn:hover { background: var(--golden-foam); color: var(--espresso); }
+.game-btn.reset { border-color: var(--chai); color: var(--chai); }
+.game-btn.reset:hover { background: var(--chai); color: white; }
+
+/* ============================================
+   MENU SECTION
+   ============================================ */
+.menu-section { padding: 60px 40px; text-align: center; }
+.menu-inner { max-width: 1400px; margin: 0 auto; }
+.menu-heading {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 400;
+  color: var(--espresso);
+  margin-bottom: 8px;
+}
+.menu-toggle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: var(--chai);
+  margin-bottom: 48px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.menu-toggle:hover { color: var(--berry); }
+.menu-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.menu-card {
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  padding: 0;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--espresso);
+  transition: all 0.4s ease;
+  border: 1.5px solid rgba(44,24,16,0.06);
+  cursor: pointer;
+}
+.menu-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(44,24,16,0.1);
+  border-color: var(--caramel);
+}
+.menu-card-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+.menu-card:nth-child(1) .menu-card-image { background: linear-gradient(135deg, rgba(107,143,94,0.15), rgba(232,213,183,0.3)); }
+.menu-card:nth-child(2) .menu-card-image { background: linear-gradient(135deg, rgba(94,143,163,0.15), rgba(232,213,183,0.3)); }
+.menu-card:nth-child(3) .menu-card-image { background: linear-gradient(135deg, rgba(139,58,94,0.15), rgba(232,213,183,0.3)); }
+.menu-card-label {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu-card-label .arrow-icon {
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s;
+}
+.menu-card:hover .arrow-icon { opacity: 1; transform: translateX(0); }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  color: var(--espresso);
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 30% 0%, rgba(176,120,66,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.footer-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+.footer-heading {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 400;
+  margin-bottom: 48px;
+  line-height: 1.15;
+}
+.footer-heading em { color: var(--chai); font-style: italic; }
+.footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+.contact-form h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--americano);
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(44,24,16,0.12);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.5);
+  color: var(--espresso);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--chai); }
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: rgba(44,24,16,0.25); }
+.submit-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 10px;
+  border: none;
+  background: var(--espresso);
+  color: var(--cream);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.submit-btn:hover { background: var(--americano); transform: translateY(-2px); }
+.send-confirmation {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--matcha);
+  margin-top: 16px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.send-confirmation.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.socials h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--americano);
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+.social-links { display: flex; flex-direction: column; gap: 16px; }
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(44,24,16,0.08);
+}
+.social-link:hover {
+  color: var(--espresso);
+  border-color: rgba(44,24,16,0.2);
+  background: rgba(255,255,255,0.3);
+  transform: translateX(4px);
+}
+.social-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: rgba(44,24,16,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.footer-bottom {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(44,24,16,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-bottom p {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.footer-bottom .footer-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1rem;
+  color: var(--americano);
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--latte-foam);
+  z-index: 999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem;
+  color: var(--espresso);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--chai); }
+.mobile-menu-close {
+  position: absolute;
+  top: 20px; right: 40px;
+  font-size: 1.8rem;
+  background: none; border: none;
+  cursor: pointer;
+  color: var(--espresso);
+}
+.mobile-sub-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 20px;
+  border-left: 2px solid var(--oat-milk);
+  margin: -16px 0 0 0;
+}
+.mobile-sub-links a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+.mobile-contact-btn {
+  background: var(--espresso);
+  color: var(--cream) !important;
+  padding: 14px 36px;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: background 0.3s;
+}
+.mobile-contact-btn:hover { background: var(--chai); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero { padding: 80px 24px 60px; }
+  .intro { padding: 80px 24px; }
+  .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+  .intro-photo { order: -1; }
+  .music-section { padding: 60px 24px; }
+  .music-layout { grid-template-columns: 1fr; gap: 40px; }
+  .game-section { padding: 60px 24px; }
+  .menu-section { padding: 60px 24px; }
+  .menu-cards { grid-template-columns: 1fr; }
+  .footer { padding: 60px 24px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .navbar { padding: 14px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-logo">
+    <span class="coffee-icon">☕</span> kaju coffeehouse
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li class="nav-dropdown">
+      <a href="professional.html" class="dropdown-trigger">Professional Stuff <span class="dropdown-arrow">▾</span></a>
+      <ul class="dropdown-menu">
+        <li><a href="professional.html#experience">Work Experience</a></li>
+        <li><a href="professional.html#orgs">Orgs & Student Involvement</a></li>
+        <li><a href="professional.html#projects">Projects</a></li>
+        <li><a href="https://drive.google.com/file/d/1FVCtVflw8w2cqcvIUDCd37H0Tk04hV0h/view?usp=sharing" target="_blank" rel="noopener">Resume ↗</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown">
+      <a href="unprofessional.html" class="dropdown-trigger">Un-Professional Stuff <span class="dropdown-arrow">▾</span></a>
+      <ul class="dropdown-menu">
+        <li><a href="unprofessional.html#reviews">Movie & TV Reviews</a></li>
+        <li><a href="unprofessional.html#coffee">Coffee Ratings</a></li>
+        <li><a href="unprofessional.html#travel">Travel</a></li>
+      </ul>
+    </li>
+    <li><a href="diary.html">My Virtual Diary</a></li>
+    <li><a href="#contact" class="nav-contact-btn">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileClose">&times;</button>
+  <a href="#home" onclick="closeMobile()">Home</a>
+  <a href="about.html" onclick="closeMobile()">About</a>
+  <a href="professional.html" onclick="closeMobile()">Professional Stuff</a>
+  <div class="mobile-sub-links">
+    <a href="professional.html#experience" onclick="closeMobile()">Work Experience</a>
+    <a href="professional.html#orgs" onclick="closeMobile()">Orgs & Involvement</a>
+    <a href="professional.html#projects" onclick="closeMobile()">Projects</a>
+    <a href="https://drive.google.com/file/d/1FVCtVflw8w2cqcvIUDCd37H0Tk04hV0h/view?usp=sharing" target="_blank" rel="noopener" onclick="closeMobile()">Resume ↗</a>
+  </div>
+  <a href="unprofessional.html" onclick="closeMobile()">Un-Professional Stuff</a>
+  <div class="mobile-sub-links">
+    <a href="unprofessional.html#reviews" onclick="closeMobile()">Movie & TV Reviews</a>
+    <a href="unprofessional.html#coffee" onclick="closeMobile()">Coffee Ratings</a>
+    <a href="unprofessional.html#travel" onclick="closeMobile()">Travel</a>
+  </div>
+  <a href="diary.html" onclick="closeMobile()">My Virtual Diary</a>
+  <a href="#contact" class="mobile-contact-btn" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="home">
+  <div class="steam-container" id="steamContainer"></div>
+  <div class="hero-content">
+    <div class="hero-animation">
+      <div class="coffee-cup-art">☕</div>
+    </div>
+    <h1 class="hero-title">
+      Kajubarfi's<br><em>Coffee House</em>
+    </h1>
+    <p class="hero-subtitle">electrical engineering @ texas a&m university · est 2015</p>
+    <div class="scroll-indicator" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">
+      <div class="arrow">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== GRADIENT WRAPPER ========== -->
+<div class="page-content">
+
+<section class="intro" id="intro">
+  <div class="intro-grid">
+    <div class="intro-text">
+      <div class="typewriter-block reveal">
+        <div class="typewriter-line">
+          Howdy! I'm <span class="highlight" id="typewriterTarget">an engineer</span><span class="typewriter-cursor" id="twCursor"></span>
+        </div>
+      </div>
+      <p class="intro-body reveal" style="transition-delay: 0.15s;">
+        Thanks for checking out my cozy corner of the internet. Before you scroll to learn more about me, listen to some music while you wait to order your coffee!
+      </p>
+      <p class="intro-handwritten reveal" style="transition-delay: 0.3s;">
+        <a href="#menu" style="color: var(--chai); text-decoration: none;">[ or click here to jump directly → ]</a>
+      </p>
+    </div>
+    <div class="intro-photo reveal" style="transition-delay: 0.2s;">
+      <img src="lehana.png" alt="Lehana" />
+    </div>
+  </div>
+</section>
+
+<section class="music-section" id="music">
+  <div class="music-layout">
+    <div class="music-left reveal">
+      <div class="doodle-image">
+        <img src="coffee-doodle.png" alt="Coffee shop line doodle" />
+      </div>
+    </div>
+    <div class="music-right">
+      <h2 class="music-heading reveal">What's currently playing?</h2>
+      <p class="music-sub reveal" style="transition-delay: 0.1s;">Lehana's favorites</p>
+      <div class="music-controls reveal" style="transition-delay: 0.2s;">
+        <button class="genre-btn active" data-playlist="37i9dQZF1DX2sUQwD7tbmL">Indie</button>
+        <button class="genre-btn" data-playlist="37i9dQZF1DWWQRwui0ExPn">Lo-Fi</button>
+        <button class="genre-btn" data-playlist="37i9dQZF1DXbITWG1ZJKYt">Jazz</button>
+        <button class="genre-btn" data-playlist="37i9dQZF1DXcF6B6QPhFDv">Rock</button>
+        <button class="genre-btn" data-playlist="37i9dQZF1DXcBWIGoYBM5M">Pop</button>
+        <button class="genre-btn surprise">🎲 Surprise me</button>
+      </div>
+      <div class="spotify-container reveal" style="transition-delay: 0.3s;">
+        <iframe
+          id="spotifyEmbed"
+          style="border-radius: 12px;"
+          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="game-section" id="game">
+  <div class="game-inner">
+    <h2 class="game-heading reveal">It's your turn! Order up!</h2>
+    <p class="game-sub reveal" style="transition-delay: 0.1s;">my little coffee-themed video game</p>
+    <div class="game-canvas reveal" style="transition-delay: 0.2s;" id="gameCanvas">
+      <div class="game-placeholder">
+        <div class="big-text">My Video Game</div>
+        <div>☕ cursor · coffee orders · chaos</div>
+      </div>
+    </div>
+    <div class="game-controls reveal" style="transition-delay: 0.3s;">
+      <button class="game-btn">▶ Play</button>
+      <button class="game-btn reset">↺ Reset</button>
+    </div>
+  </div>
+</section>
+
+<section class="menu-section" id="menu">
+  <div class="menu-inner">
+    <h2 class="menu-heading reveal">Choose a <span id="menuWord">drink</span> to get started!</h2>
+    <p class="menu-toggle reveal" style="transition-delay: 0.1s;" id="menuToggle">
+      not a drink person? try pastries →
+    </p>
+    <div class="menu-cards">
+      <a class="menu-card reveal" style="transition-delay: 0.15s;" href="#about" id="about">
+        <div class="menu-card-image">☕</div>
+        <div class="menu-card-label">About Me! <span class="arrow-icon">→</span></div>
+      </a>
+      <a class="menu-card reveal" style="transition-delay: 0.25s;" href="#professional" id="professional">
+        <div class="menu-card-image">💻</div>
+        <div class="menu-card-label">Professional Stuff <span class="arrow-icon">→</span></div>
+      </a>
+      <a class="menu-card reveal" style="transition-delay: 0.35s;" href="#unprofessional" id="unprofessional">
+        <div class="menu-card-image">🎨</div>
+        <div class="menu-card-label">Un-Professional Stuff <span class="arrow-icon">→</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" id="contact">
+  <div class="footer-inner">
+    <h2 class="footer-heading reveal">Find a kajubarfi coffeehouse<br><em>near you!</em></h2>
+    <div class="footer-grid">
+      <div class="contact-form reveal" style="transition-delay: 0.1s;">
+        <h3>Contact Me!</h3>
+        <div class="form-group">
+          <label for="contactName">Name</label>
+          <input type="text" id="contactName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" placeholder="What's brewing?"></textarea>
+        </div>
+        <button class="submit-btn" id="contactSendBtn">Send it ☕</button>
+        <p class="send-confirmation" id="sendConfirmation">✓ Opening your email client — thanks for reaching out!</p>
+      </div>
+      <div class="socials reveal" style="transition-delay: 0.2s;">
+        <h3>Find Me Online</h3>
+        <div class="social-links">
+          <a href="mailto:lehanar57@tamu.edu" class="social-link"><div class="social-icon">📧</div><span>lehanar57@tamu.edu</span></a>
+          <a href="#" class="social-link"><div class="social-icon">🐙</div><span>GitHub</span></a>
+          <a href="#" class="social-link"><div class="social-icon">💼</div><span>LinkedIn</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-logo">☕ kaju coffeehouse</span>
+      <p>brewed with love · &copy; 2025 lehana</p>
+    </div>
+  </div>
+</footer>
+
+</div><!-- end .page-content -->
+
+<script>
+// ===== NAVBAR SCROLL =====
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== MOBILE MENU =====
+document.getElementById('hamburgerBtn').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.add('open');
+});
+document.getElementById('mobileClose').addEventListener('click', closeMobile);
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ===== STEAM PARTICLES =====
+const steamContainer = document.getElementById('steamContainer');
+for (let i = 0; i < 20; i++) {
+  const s = document.createElement('div');
+  s.className = 'steam';
+  s.style.left = Math.random() * 100 + '%';
+  s.style.height = (Math.random() * 80 + 40) + 'px';
+  s.style.animationDuration = (Math.random() * 6 + 6) + 's';
+  s.style.animationDelay = (Math.random() * 8) + 's';
+  steamContainer.appendChild(s);
+}
+
+// ===== TYPEWRITER EFFECT =====
+const phrases = ['an engineer.', 'a designer.', 'a coffee addict.', 'Lehana.'];
+const target = document.getElementById('typewriterTarget');
+const twCursor = document.getElementById('twCursor');
+let phraseIdx = 0;
+let charIdx = 0;
+let isDeleting = false;
+let typeSpeed = 100;
+
+function typewrite() {
+  const current = phrases[phraseIdx];
+  const isLastPhrase = phraseIdx === phrases.length - 1;
+
+  if (!isDeleting) {
+    target.textContent = current.slice(0, charIdx + 1);
+    charIdx++;
+    if (charIdx === current.length) {
+      if (isLastPhrase) {
+        target.style.transition = 'color 1.2s ease';
+        target.style.color = 'var(--berry)';
+        twCursor.style.transition = 'color 1.2s ease, opacity 0.8s ease 1.5s';
+        twCursor.style.color = 'var(--berry)';
+        twCursor.style.opacity = '0';
+        return;
+      }
+      isDeleting = true;
+      typeSpeed = 1400;
+      setTimeout(typewrite, typeSpeed);
+      return;
+    }
+    typeSpeed = 80 + Math.random() * 60;
+  } else {
+    target.textContent = current.slice(0, charIdx - 1);
+    charIdx--;
+    if (charIdx === 0) {
+      isDeleting = false;
+      phraseIdx++;
+      typeSpeed = 400;
+      setTimeout(typewrite, typeSpeed);
+      return;
+    }
+    typeSpeed = 40 + Math.random() * 30;
+  }
+  setTimeout(typewrite, typeSpeed);
+}
+
+const introObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(typewrite, 600);
+      introObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+introObserver.observe(document.getElementById('intro'));
+
+// ===== SCROLL REVEAL =====
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ===== GENRE BUTTONS — SWAP SPOTIFY PLAYLIST =====
+const spotifyEmbed = document.getElementById('spotifyEmbed');
+const allGenreBtns = document.querySelectorAll('.genre-btn');
+const playlists = Array.from(allGenreBtns)
+  .filter(b => b.dataset.playlist)
+  .map(b => b.dataset.playlist);
+
+allGenreBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    allGenreBtns.forEach(b => b.classList.remove('active'));
+
+    if (this.classList.contains('surprise')) {
+      // Pick a random playlist
+      const randomId = playlists[Math.floor(Math.random() * playlists.length)];
+      spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${randomId}?utm_source=generator&theme=0`;
+    } else {
+      this.classList.add('active');
+      const playlistId = this.dataset.playlist;
+      if (playlistId) {
+        spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`;
+      }
+    }
+  });
+});
+
+// ===== MENU TOGGLE =====
+let isDrink = true;
+const menuWord = document.getElementById('menuWord');
+const menuToggle = document.getElementById('menuToggle');
+menuToggle.addEventListener('click', () => {
+  isDrink = !isDrink;
+  if (isDrink) {
+    menuWord.textContent = 'drink';
+    menuToggle.innerHTML = 'not a drink person? try pastries →';
+    document.querySelectorAll('.menu-card-image')[0].textContent = '☕';
+  } else {
+    menuWord.textContent = 'pastry';
+    menuToggle.innerHTML = 'not a pastry person? try drinks →';
+    document.querySelectorAll('.menu-card-image')[0].textContent = '🧁';
+  }
+});
+
+// ===== COFFEE CURSOR ON GAME CANVAS =====
+const gameCanvas = document.getElementById('gameCanvas');
+const cursorDot = document.createElement('div');
+cursorDot.style.cssText = 'position:absolute;width:32px;height:32px;font-size:24px;pointer-events:none;z-index:10;transition:transform 0.1s ease;display:none;';
+cursorDot.textContent = '☕';
+gameCanvas.appendChild(cursorDot);
+gameCanvas.addEventListener('mouseenter', () => { cursorDot.style.display = 'block'; });
+gameCanvas.addEventListener('mouseleave', () => { cursorDot.style.display = 'none'; });
+gameCanvas.addEventListener('mousemove', (e) => {
+  const rect = gameCanvas.getBoundingClientRect();
+  cursorDot.style.left = (e.clientX - rect.left - 16) + 'px';
+  cursorDot.style.top = (e.clientY - rect.top - 16) + 'px';
+});
+// ===== CONTACT FORM → MAILTO =====
+document.getElementById('contactSendBtn').addEventListener('click', () => {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+
+  const subject = encodeURIComponent(`Message from ${name || 'Website Visitor'}`);
+  const body = encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`);
+
+  window.open(`mailto:lehanar57@tamu.edu?subject=${subject}&body=${body}`, '_self');
+
+  // Show confirmation
+  document.getElementById('sendConfirmation').classList.add('visible');
+});
+</script>
+</body>
+</html>

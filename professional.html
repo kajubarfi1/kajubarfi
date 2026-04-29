@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Menu | Kajubarfi's Coffee House</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --espresso:#2C1810;--dark-roast:#3D2117;--americano:#5C3A2A;--caramel:#B07842;
+  --golden-foam:#D4A96A;--oat-milk:#E8D5B7;--cream:#F5EDE0;--latte-foam:#FAF6F0;
+  --matcha:#6B8F5E;--chai:#C4713B;--berry:#8B3A5E;--iced-blue:#5E8FA3;
+  --chalkboard:#2A2520;--chalk:#E8DDD0;
+  --text-primary:var(--espresso);--text-secondary:var(--americano);--text-muted:#8C7A6B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--latte-foam);color:var(--text-primary);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+
+/* ===== NAVBAR ===== */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:16px 40px;background:rgba(250,246,240,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,24,16,0.06);transition:all 0.4s ease;}
+.navbar.scrolled{padding:12px 40px;background:rgba(250,246,240,0.95);box-shadow:0 2px 20px rgba(44,24,16,0.06);}
+.nav-logo{font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--espresso);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-logo .coffee-icon{font-size:1.3rem;}
+.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
+.nav-links>li{position:relative;}
+.nav-links a{font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;color:var(--text-secondary);text-decoration:none;position:relative;transition:color 0.3s;}
+.nav-links a:hover{color:var(--chai);}
+.nav-links>li>a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--chai);transition:width 0.3s;}
+.nav-links>li>a:hover::after{width:100%;}
+.nav-contact-btn{background:var(--espresso)!important;color:var(--cream)!important;padding:8px 22px!important;border-radius:100px!important;font-weight:600!important;transition:all 0.3s!important;}
+.nav-contact-btn:hover{background:var(--chai)!important;color:white!important;}
+.nav-contact-btn::after{display:none!important;}
+.dropdown-arrow{font-size:0.7rem;margin-left:2px;opacity:0.5;transition:transform 0.3s;}
+.nav-dropdown:hover .dropdown-arrow{transform:rotate(180deg);opacity:1;}
+.dropdown-menu{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);list-style:none;background:rgba(250,246,240,0.97);backdrop-filter:blur(20px);border:1px solid rgba(44,24,16,0.08);border-radius:12px;padding:8px 0;min-width:220px;box-shadow:0 8px 32px rgba(44,24,16,0.1);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(8px);transition:all 0.25s ease;z-index:1001;}
+.nav-dropdown:hover .dropdown-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.dropdown-menu li{padding:0;}
+.dropdown-menu a{display:block;padding:10px 20px;font-size:0.83rem;font-weight:400;color:var(--text-secondary);transition:all 0.2s;white-space:nowrap;}
+.dropdown-menu a:hover{background:rgba(44,24,16,0.04);color:var(--chai);padding-left:24px;}
+.dropdown-menu a::after{display:none;}
+.nav-dropdown::after{content:'';position:absolute;top:100%;left:0;width:100%;height:16px;}
+
+/* ===== CHALKBOARD HERO ===== */
+.menu-hero {
+  background: var(--chalkboard);
+  padding: 160px 40px 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+/* chalk dust texture */
+.menu-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.menu-hero-content { position: relative; z-index: 2; }
+.menu-hero-top {
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: var(--golden-foam);
+  opacity: 0.6;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+.menu-hero h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 400;
+  color: var(--chalk);
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.menu-hero h1 em { color: var(--golden-foam); font-style: italic; }
+.menu-hero .subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--oat-milk);
+  opacity: 0.6;
+  max-width: 500px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+/* Menu category tabs */
+.menu-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.menu-tab {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  padding: 10px 28px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(232,213,183,0.2);
+  background: transparent;
+  color: var(--oat-milk);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.menu-tab:hover, .menu-tab.active {
+  background: var(--golden-foam);
+  color: var(--chalkboard);
+  border-color: var(--golden-foam);
+}
+
+/* ===== GRADIENT BODY ===== */
+.page-body {
+  background: linear-gradient(180deg, #FAF6F0 0%, #F7F1E7 25%, #F3EBDD 50%, #EFE4D2 75%, #E8D5B7 100%);
+}
+
+/* ===== MENU SECTION ===== */
+.menu-section {
+  padding: 80px 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Section header — like a menu category */
+.menu-category {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--espresso);
+}
+.menu-category-icon {
+  font-size: 1.8rem;
+}
+.menu-category h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 400;
+  color: var(--espresso);
+}
+.menu-category h2 em { font-style: italic; }
+.menu-category h2 .accent-blue { color: var(--iced-blue); }
+.menu-category h2 .accent-green { color: var(--matcha); }
+.menu-category h2 .accent-berry { color: var(--berry); }
+.menu-category-desc {
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+/* ===== MENU ITEM (experience entry) ===== */
+.menu-item {
+  margin-bottom: 56px;
+  padding-bottom: 56px;
+  border-bottom: 1px dashed var(--oat-milk);
+}
+.menu-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+/* Item header — like a drink name + price */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.item-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.6rem;
+  color: var(--espresso);
+}
+.item-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  /* dotted leader line */
+  flex: 1;
+  border-bottom: 1px dotted var(--oat-milk);
+  margin: 0 12px;
+  min-width: 60px;
+  height: 0;
+  align-self: center;
+}
+.item-date-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.item-role {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: var(--chai);
+  margin-bottom: 20px;
+}
+
+.item-body p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* Photos inline */
+.item-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin: 28px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.item-photos img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.item-photos img:hover { transform: scale(1.04); }
+
+/* Pull quote — like a barista's note */
+.barista-note {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  color: var(--espresso);
+  line-height: 1.5;
+  padding: 24px 28px;
+  margin: 28px 0;
+  background: rgba(196,113,59,0.06);
+  border-radius: 12px;
+  position: relative;
+}
+.barista-note::before {
+  content: '✎';
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  font-size: 1.2rem;
+  background: var(--latte-foam);
+  padding: 0 8px;
+}
+
+/* Sticky note quote */
+.sticky-note {
+  margin: 28px 0;
+  padding: 24px 28px;
+  background: #FFF8DC;
+  position: relative;
+  max-width: 520px;
+  box-shadow:
+    2px 3px 12px rgba(44,24,16,0.1),
+    0 1px 3px rgba(44,24,16,0.06);
+  transform: rotate(-1deg);
+}
+.sticky-note::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 18px;
+  background: rgba(232,213,183,0.55);
+  border-radius: 1px;
+}
+.sticky-note::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 20px; height: 20px;
+  background: linear-gradient(135deg, #FFF8DC 45%, #E8DCC0 50%, #DDD0B4 100%);
+}
+.sticky-note p {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  color: var(--espresso);
+  line-height: 1.5;
+}
+
+/* Takeaways — like a "barista recommends" card */
+.recommends {
+  margin: 28px 0;
+  padding: 28px;
+  background: var(--chalkboard);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.recommends::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.recommends-label {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: var(--golden-foam);
+  margin-bottom: 20px;
+  position: relative;
+}
+.recommends ol {
+  list-style: none;
+  counter-reset: rec;
+  position: relative;
+}
+.recommends li {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--oat-milk);
+  padding: 8px 0 8px 32px;
+  position: relative;
+  counter-increment: rec;
+}
+.recommends li::before {
+  content: counter(rec) ".";
+  position: absolute;
+  left: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: var(--golden-foam);
+}
+.recommends li strong { color: var(--chalk); }
+
+/* ===== ORG ITEMS — like a "sides" menu ===== */
+.sides-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.side-item {
+  padding: 24px;
+  border: 1px dashed var(--oat-milk);
+  border-radius: 12px;
+  transition: transform 0.3s, background 0.3s;
+}
+.side-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.4);
+}
+.side-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.15rem;
+  color: var(--espresso);
+  margin-bottom: 2px;
+}
+.side-role {
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+  color: var(--matcha);
+  margin-bottom: 8px;
+}
+.side-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.side-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  padding-left: 0;
+  list-style: none;
+}
+.side-sub li {
+  padding: 3px 0;
+  position: relative;
+  padding-left: 16px;
+}
+.side-sub li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--chai);
+  font-weight: 700;
+}
+.side-sub-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+.other-involvements {
+  margin-top: 32px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ===== PROJECT ITEMS — like "specials" ===== */
+.special-item {
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px dashed var(--oat-milk);
+}
+.special-item:last-child { border-bottom: none; padding-bottom: 0; }
+.special-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.special-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.4rem;
+  color: var(--espresso);
+}
+.special-tech {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.special-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+
+/* ===== SECTION DIVIDER ===== */
+.menu-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 40px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.menu-divider::before, .menu-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--oat-milk);
+}
+.menu-divider span {
+  font-size: 1.4rem;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--chalkboard);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.footer p {
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+  color: var(--oat-milk);
+  opacity: 0.5;
+  position: relative;
+}
+.footer .footer-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.1rem;
+  color: var(--golden-foam);
+  display: block;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .navbar { padding: 14px 24px; }
+  .menu-hero { padding: 120px 24px 60px; }
+  .menu-section { padding: 60px 24px; }
+  .item-photos { grid-template-columns: 1fr; }
+  .sides-grid { grid-template-columns: 1fr; }
+  .item-date { display: none; }
+  .footer { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo"><span class="coffee-icon">☕</span> kaju coffeehouse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li class="nav-dropdown">
+      <a href="professional.html" class="dropdown-trigger" style="color:var(--chai);">Professional Stuff <span class="dropdown-arrow">▾</span></a>
+      <ul class="dropdown-menu">
+        <li><a href="#experience">Work Experience</a></li>
+        <li><a href="#orgs">Orgs & Student Involvement</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="https://drive.google.com/file/d/1FVCtVflw8w2cqcvIUDCd37H0Tk04hV0h/view?usp=sharing" target="_blank" rel="noopener">Resume ↗</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown">
+      <a href="unprofessional.html" class="dropdown-trigger">Un-Professional Stuff <span class="dropdown-arrow">▾</span></a>
+      <ul class="dropdown-menu">
+        <li><a href="unprofessional.html#reviews">Movie & TV Reviews</a></li>
+        <li><a href="unprofessional.html#coffee">Coffee Ratings</a></li>
+        <li><a href="unprofessional.html#travel">Travel</a></li>
+      </ul>
+    </li>
+    <li><a href="diary.html">My Virtual Diary</a></li>
+    <li><a href="index.html#contact" class="nav-contact-btn">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ===== CHALKBOARD HERO ===== -->
+<div class="menu-hero">
+  <div class="menu-hero-content">
+    <p class="menu-hero-top reveal">☕ kajubarfi's coffeehouse presents</p>
+    <h1 class="reveal" style="transition-delay:0.1s;">the <em>menu</em></h1>
+    <p class="subtitle reveal" style="transition-delay:0.2s;">a carefully curated selection of professional experiences, served fresh</p>
+    <div class="menu-tabs reveal" style="transition-delay:0.3s;">
+      <a href="#experience" class="menu-tab active">☕ Brews (Experience)</a>
+      <a href="#orgs" class="menu-tab">🥐 Sides (Orgs)</a>
+      <a href="#projects" class="menu-tab">✨ Specials (Projects)</a>
+      <a href="https://drive.google.com/file/d/1FVCtVflw8w2cqcvIUDCd37H0Tk04hV0h/view?usp=sharing" target="_blank" class="menu-tab">📋 Full Menu (Resume) ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE BODY ===== -->
+<div class="page-body">
+
+<!-- ========================================
+     ☕ BREWS — WORK EXPERIENCE
+     ======================================== -->
+<section class="menu-section" id="experience">
+  <div class="menu-category reveal">
+    <span class="menu-category-icon">☕</span>
+    <h2>our <em class="accent-blue">brews</em></h2>
+  </div>
+  <p class="menu-category-desc reveal">work experience — slow-roasted, full-bodied, and best enjoyed with an open mind</p>
+
+  <!-- TEXAS INSTRUMENTS -->
+  <article class="menu-item reveal">
+    <div class="item-header">
+      <span class="item-name">Texas Instruments</span>
+      <span class="item-date"></span>
+      <span class="item-date-text">Summer 2025 · 12 Weeks</span>
+    </div>
+    <div class="item-role">Technical Product Marketing Engineering Intern · Low Power Connectivity Solutions</div>
+
+    <div class="item-body">
+      <p>If Valero taught me what it means to be in the field, TI taught me what it means to tell a story. I spent the summer as a Product Marketing Engineer in TI's Low Power Connectivity Solutions group, and my entire project revolved around one thing: Channel Sounding — a brand new feature in the Bluetooth 6.0 specification.</p>
+
+      <p>I was given a technology and full creative liberty to figure out how TI should talk about it. That meant starting from scratch — understanding the RF fundamentals behind Channel Sounding, researching how competitors were positioning their solutions, and then building out a marketing strategy to fill the gaps I found.</p>
+    </div>
+
+    <div class="item-body">
+      <p>By the end of the summer, I'd put together a competitive analysis comparing TI's Channel Sounding collateral against competitor companies and identifying where TI's messaging was falling short. From there, I restructured existing marketing materials to address those gaps, wrote a 10-page technical white paper highlighting real-world use cases, filmed a Channel Sounding informational video, and created a demo video showing TI's CC27xx solution in action. All of which will soon be live on ti.com.</p>
+
+      <p>The coolest part was realizing that marketing engineering isn't just "making things look nice" — it's about taking something deeply technical and translating it into a story that makes a customer care. It's a skill I didn't expect to fall in love with.</p>
+    </div>
+
+    <div class="sticky-note reveal">
+      <p>Being able to take a very complex problem and explain it in terms that a customer can understand — that's what separates a good PME from a great one.</p>
+    </div>
+
+    <div class="recommends reveal">
+      <div class="recommends-label">☕ my takeaways</div>
+      <ol>
+        <li><strong>Be proactive with feedback.</strong> A huge part of marketing is catering your solution to a wide range of people. Taking insights from others — no matter how small — makes your strategy more versatile. I learned to actively seek out opinions instead of waiting for them.</li>
+        <li><strong>Break abstract concepts into digestible pieces.</strong> Expecting to understand everything at first glance isn't reasonable, especially with complex RF technologies like Channel Sounding. The ability to simplify without losing accuracy is everything in this role.</li>
+        <li><strong>Be adaptable.</strong> The market is constantly shifting, which means what works today might not work tomorrow. Understanding the "why" behind your work makes it so much easier to pivot when things change — and they always do.</li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- VALERO -->
+  <article class="menu-item reveal">
+    <div class="item-header">
+      <span class="item-name">Valero Energy Corporation</span>
+      <span class="item-date"></span>
+      <span class="item-date-text">Summer 2024 · 12 Weeks</span>
+    </div>
+    <div class="item-role">Electrical Engineering Intern</div>
+
+    <div class="item-body">
+      <p>This was my first real taste of power engineering, and it completely changed how I think about electrical systems. I spent 12 weeks at a Valero refinery working alongside a team of electrical engineers who were responsible for keeping everything running — and I mean everything.</p>
+
+      <p>Most of my days were split between the field and the office. In the field, I was getting hands-on with high voltage systems up to 12.5 kV — working around switchgears, motor control centers, and learning how three-phase power keeps a refinery alive. In the office, I was tracing through wiring diagrams, writing up Management of Change documents, and helping develop technical drawings for large-scale projects.</p>
+    </div>
+
+
+    <div class="item-body">
+      <p>The project I'm most proud of was owning a motor protection relay replacement from start to finish. I redlined the wiring diagrams, programmed the SEL 849 relays, and was on-site for every step of the installation. There's something about seeing a project go from paper to reality that just hits different.</p>
+
+      <p>I also supported the installation of a voltage ridethrough system for a critical motor — one of those things where you realize how much careful engineering goes into keeping a single piece of equipment from going down.</p>
+    </div>
+
+    <div class="sticky-note reveal">
+      <p>What surprised me most was how much of this job is communication. The technical work is only half of it — the other half is planning, coordination, and adapting when things inevitably don't go according to plan.</p>
+    </div>
+
+    <div class="recommends reveal">
+      <div class="recommends-label">☕ my takeaways</div>
+      <ol>
+        <li><strong>Show up to everything.</strong> Even if a meeting has nothing to do with your work, understanding how the rest of the company operates makes you way better at your own job. Some of my best learning moments came from presentations I almost skipped.</li>
+        <li><strong>Ask the big-picture questions first.</strong> When you're lost (and you will be), don't try to understand every detail right away. Ask questions that help you see the overall process — the specifics start making sense once you have the full picture.</li>
+        <li><strong>Write everything down.</strong> Seriously. Every meeting, every field visit, every random thing someone explains to you. Future you will thank present you.</li>
+      </ol>
+    </div>
+
+    <div class="item-photos">
+      <img src="internsympo.jpeg" alt="Lehana at Valero" />
+      <img src="lehanavalero.jpeg" alt="Valero internship" />
+      <img src="valero2.JPG" alt="Valero refinery" />
+    </div>
+  </article>
+
+  
+  <!-- TAMU VET MED IT -->
+  <article class="menu-item reveal">
+    <div class="item-header">
+      <span class="item-name">Texas A&M Veterinary Medicine — Dept. of IT</span>
+      <span class="item-date"></span>
+      <span class="item-date-text">Aug 2023 – Jan 2025</span>
+    </div>
+    <div class="item-role">Lead Student IT Technician · prev: General Student IT Technician (Aug 2023 – Feb 2024)</div>
+
+    <div class="item-body">
+      <p>Managed 12+ student technicians and 300+ loaner laptops, handling hardware/software troubleshooting, data recovery, and imaging across the college. Oversaw computer surplus and backups, coordinating with property managers on parts removal and correct destinations.</p>
+    </div>
+  </article>
+
+
+</section>
+
+<div class="menu-divider"><span>☕</span></div>
+
+<!-- ========================================
+     🥐 SIDES — ORGS & INVOLVEMENT
+     ======================================== -->
+<section class="menu-section" id="orgs">
+  <div class="menu-category reveal">
+    <span class="menu-category-icon">🥐</span>
+    <h2>the <em class="accent-green">sides</em></h2>
+  </div>
+  <p class="menu-category-desc reveal">organizations & involvement — pairs perfectly with everything on the menu</p>
+
+  <div class="sides-grid">
+    <div class="side-item reveal">
+      <div class="side-name">Society of Women Engineers — Texas A&M</div>
+      <div class="side-sub-label">High School Conference</div>
+      <div class="side-role">High School Conference Co-Chair · Apr 2025 – Present</div>
+      <div class="side-desc">Planning a conference for 100+ high school students and 20+ parents to explore Texas A&M and engineering. Coordinating with 30+ participants, vendors, and student orgs, and leading weekly committee meetings of 15+ participants to create design collateral and conference material.</div>
+      <div class="side-sub-label">SWElites</div>
+      <div class="side-role">Co-Chair · 2024–2025</div>
+      <div class="side-desc">Co-led SWElites, a freshman leadership engineering program within SWE. Mentored 50 first-year students and 10 counselors through various engineering service events for the surrounding community. Collaborated with a team of officers to manage a SWE chapter of 600+ members.</div>
+      <ul class="side-sub">
+        <li>Service Co-Counselor · 2023–2024</li>
+        <li>Service SWElite · 2022–2023</li>
+      </ul>
+    </div>
+    <div class="side-item reveal" style="transition-delay:0.1s;">
+      <div class="side-name">TAMU Percussion Studio</div>
+      <div class="side-sub-label">Webmaster</div>
+      <div class="side-role">Webmaster Officer · 2024–2025</div>
+      <div class="side-desc">Utilizing HTML and CSS to edit and manage the TAMU Percussion Studio website.</div>
+      <div class="side-sub-label">Gig Master</div>
+      <div class="side-role">Performance Coordinator · 2023–2024</div>
+      <div class="side-desc">Coordinated performances and gigs for the studio ensemble.</div>
+    </div>
+  </div>
+
+  <p class="other-involvements reveal">also involved in: Aggie Emeralds (Women's Organization) · IEEE-TAMU · The Big Event TAMU</p>
+</section>
+
+<div class="menu-divider"><span>☕</span></div>
+
+<!-- ========================================
+     ✨ SPECIALS — PROJECTS
+     ======================================== -->
+<section class="menu-section" id="projects">
+  <div class="menu-category reveal">
+    <span class="menu-category-icon">✨</span>
+    <h2>today's <em class="accent-berry">specials</em></h2>
+  </div>
+  <p class="menu-category-desc reveal">projects — limited edition, made with love, available while supplies last</p>
+
+  <article class="special-item reveal">
+    <div class="special-header">
+      <span class="special-name">Agentic AI-Based Design Flow for DDR3 Memory Controller</span>
+      <span class="special-tech">Python · LangGraph · Claude API · SystemVerilog · RAG · FAISS</span>
+    </div>
+    <p class="special-desc">Building an agent-based framework that takes plain-English user specs and produces a DDR3 memory controller end-to-end — from RTL generation through backend synthesis, GDSII layout, and validation testbenches. Leading the frontend: creating LLM agents that take a microarchitecture spec and generate SystemVerilog RTL with built-in structural and behavioral self-validation, run in parallel via a LangGraph pipeline. Developed a RAG system that pulls from JEDEC specs and hardware documentation so agents generate spec-compliant RTL.</p>
+  </article>
+
+  <article class="special-item reveal">
+    <div class="special-header">
+      <span class="special-name">AM/FM Superheterodyne Radio Receiver</span>
+      <span class="special-tech">RF/IF Amplifiers · Mixers · Oscillators · LC Networks · Superheterodyne Architecture</span>
+    </div>
+    <p class="special-desc">Assembled and tested a 9-section AM/FM superheterodyne receiver from discrete components, including RF/IF amplifiers, mixer/oscillator stages, AGC, AM envelope detection, and FM ratio detection. Performed IF alignment at 455 kHz (AM) and 10.7 MHz (FM), oscillator tracking, and antenna tuning using signal generators, oscilloscopes, and a magic wand tool to verify gain, bandwidth, and frequency selectivity at each stage.</p>
+  </article>
+
+  <article class="special-item reveal">
+    <div class="special-header">
+      <span class="special-name">Kajubarfi's Coffee House — Personal Website</span>
+      <span class="special-tech">Figma · HTML · CSS · JavaScript</span>
+    </div>
+    <p class="special-desc">Developing a fully custom portfolio site from Figma designs with an interactive coffee builder game using HTML, CSS, and JavaScript. The project that taught me that starting is the hardest part.</p>
+  </article>
+</section>
+
+</div><!-- end .page-body -->
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <span class="footer-logo">☕ kaju coffeehouse</span>
+  <p>brewed with love · © 2025 lehana</p>
+</footer>
+
+<script>
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>50);});
+const revealObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+</script>
+</body>
+</html>
